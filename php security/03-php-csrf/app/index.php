@@ -1,12 +1,17 @@
 <?php
+    include_once 'helper.php';
+
     $email    = null;
     $fullname = null;
     $password = null;
 
-    if(isset($_REQUEST['update'])) {
-        $email    = !empty($_REQUEST['email']) ? $_REQUEST['email'] : null;
-        $fullname = !empty($_REQUEST['fullname']) ? $_REQUEST['fullname'] : null;
-        $password = !empty($_REQUEST['password']) ? $_REQUEST['password'] : null;
+    # step 3
+    if(isset($_REQUEST['update'], $_REQUEST['token'])) {
+        if (Helper::checkCSRFToken($_REQUEST['token'])) {
+            $email    = !empty($_REQUEST['email']) ? $_REQUEST['email'] : null;
+            $fullname = !empty($_REQUEST['fullname']) ? $_REQUEST['fullname'] : null;
+            $password = !empty($_REQUEST['password']) ? $_REQUEST['password'] : null;
+        }
     }
 ?>
 <!DOCTYPE html>
@@ -33,9 +38,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="fullname" class="col-sm-2 control-label">Fullname</label>
+                    <label for="fullname" class="col-sm-2 control-label">Name</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="fullname" id="fullname" <?php echo ($fullname) ? "value='$fullname'" : "placeholder='Default Fullname'" ?>>
+                        <input type="text" class="form-control" name="fullname" id="fullname" <?php echo ($fullname) ? "value='$fullname'" : "placeholder='Default Name'" ?>>
                     </div>
                 </div>
                 <div class="form-group">
@@ -49,6 +54,8 @@
                         <button type="submit" class="btn btn-info" name="update" value="1">Update Profile</button>
                     </div>
                 </div>
+                <!-- step #2 -->
+                <input type="hidden" name="token" value="<?php echo Helper::generateCSRFToken() ?>">
             </form>
         </div>
     </div>
